@@ -8,7 +8,7 @@ ENV SERVER_NAME="bf2-docker"
 RUN dpkg --add-architecture i386 && \
     apt -y update && \
     apt-get -y update && \
-    apt-get -y install wget expect libncurses5 nginx unzip python libglib2.0-0:i386 && \
+    apt-get -y install wget expect libncurses5 nginx unzip python libglib2.0-0:i386 dos2unix && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     useradd --create-home --shell /bin/bash bf2
@@ -16,6 +16,9 @@ RUN dpkg --add-architecture i386 && \
 # Add assets to image
 WORKDIR /home/bf2/tmp
 COPY ./assets ./
+
+# For Windows hosts con
+RUN find . -type f -exec dos2unix -k -s -o {} ';' && apt-get --purge remove -y dos2unix
 
 # Extract server files
 RUN bash -x ./setup.sh
